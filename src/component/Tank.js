@@ -22,7 +22,7 @@ const Realtime = () => {
 function Tank( ) {
 
 
-    const [Titletank,setTitletank] = useState(0)
+    const [Titletank,setTitletank] = useState("")
     const [Waterlevel,setWaterlevel] = useState(0)
     const [Time, setTime] = useState(Realtime())
     const [Newname,setNewname] = useState(Titletank)
@@ -41,17 +41,22 @@ function Tank( ) {
       }, 1000)
       
       getData()
-  
+      
     }, [])
   
     const getData = () => {
     
-      var database = firebase.database().ref('Sensores').child('sensor1')
+      var database = firebase.database().ref('Level').child('value')
       database.on('value',snap =>{
         setWaterlevel(snap.val())
         console.log(snap.val());
       })
-        // console.log(database);
+      var test =firebase.database().ref('Name').child('value')
+      test.on('value',snap =>{
+        setTitletank(snap.val())
+        console.log(snap.val());
+      })
+       // console.log(database); 
       }
 
   const Level = (num) =>{
@@ -125,6 +130,12 @@ function Tank( ) {
        
          
     }
+    function setTitle( event ){
+        const newTitle = firebase.database().ref('Name')
+        newTitle.set({
+          value : Newname
+        })
+    }
 
     return(
         <div >
@@ -147,7 +158,7 @@ function Tank( ) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={()=>{setTitletank(Newname); handleClose(); }} >
+          <Button variant="primary" onClick={()=>{setTitle(Newname); handleClose(); }} >
             Save Changes
           </Button>
         </Modal.Footer>
